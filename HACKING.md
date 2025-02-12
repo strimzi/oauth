@@ -342,8 +342,8 @@ We have to update the oauth library dependency version:
 
     sed -Ei 's#<strimzi-oauth.version>[0-9a-zA-Z.-]+</strimzi-oauth.version>#<strimzi-oauth.version>1.0.0-SNAPSHOT</strimzi-oauth.version>#g' \
       pom.xml \
-      docker-images/kafka/kafka-thirdparty-libs/2.6.x/pom.xml \
-      docker-images/kafka/kafka-thirdparty-libs/2.7.x/pom.xml
+      docker-images/artifacts/kafka-thirdparty-libs/3.8.x/pom.xml \
+      docker-images/artifacts/kafka-thirdparty-libs/3.9.x/pom.xml
 
 This makes sure the latest strimzi-kafka-oauth library that we built previously is included into Kafka images that we'll build next.
 We can check the change:
@@ -371,7 +371,7 @@ instead of doing the whole `docker_build` again:
     
 Let's make sure the SNAPSHOT Strimzi OAuth libraries are included.
 
-    docker run --rm -ti $DOCKER_REG/strimzi/kafka:0.31.1-kafka-3.2.3 /bin/sh -c 'ls -la /opt/kafka/libs/kafka-oauth*'
+    docker run --rm -ti $DOCKER_REG/strimzi/kafka:0.35.0-kafka-3.9.0 /bin/sh -c 'ls -la /opt/kafka/libs/kafka-oauth*'
 
 This executes a `ls` command inside a new Kafka container, which it removes afterwards.
 The deployed version should be 1.0.0-SNAPSHOT.
@@ -461,7 +461,7 @@ For examples of deploying such a cluster see [/examples/kubernetes/README.md](ex
 
 You can explore the Kafka container more by starting it in interactive mode:
 
-    docker run --rm -ti $DOCKER_REG/strimzi/kafka:0.31.1-kafka-3.2.3 /bin/sh
+    docker run --rm -ti $DOCKER_REG/strimzi/kafka:0.35.0-kafka-3.9.0 /bin/sh
  
 Here you've just started another interactive container from within the existing interactive container session.
 Pretty neat!

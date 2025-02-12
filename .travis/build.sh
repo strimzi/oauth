@@ -67,7 +67,7 @@ if [ "$arch" == 's390x' ]; then
     mvn test-compile spotbugs:check -e -V -B -f testsuite
     set +e
     clearDockerEnv
-    mvn -e -V -B clean install -f testsuite -Pkafka-3_6_1
+    mvn -e -V -B clean install -f testsuite -Pkafka-3_9_0
     EXIT=$?
     exitIfError
     set -e
@@ -77,12 +77,27 @@ elif [[ "$arch" != 'ppc64le' ]]; then
   set +e
 
   clearDockerEnv
-  mvn -e -V -B clean install -f testsuite -Pkafka-3_6_1 $MAVEN_EXTRA_ARGS
+  mvn -e -V -B clean install -f testsuite -Pkafka-3_9_0 $MAVEN_EXTRA_ARGS
   EXIT=$?
   exitIfError
 
   # Excluded by default to not exceed Travis job timeout
   if [ "$SKIP_DISABLED" == "false" ]; then
+
+    clearDockerEnv
+    mvn -e -V -B clean install -f testsuite -Pkafka-3_8_1 $MAVEN_EXTRA_ARGS
+    EXIT=$?
+    exitIfError
+
+    clearDockerEnv
+    mvn -e -V -B clean install -f testsuite -Pkafka-3_7_1 $MAVEN_EXTRA_ARGS
+    EXIT=$?
+    exitIfError
+
+    clearDockerEnv
+    mvn -e -V -B clean install -f testsuite -Pkafka-3_6_2 $MAVEN_EXTRA_ARGS
+    EXIT=$?
+    exitIfError
 
     clearDockerEnv
     mvn -e -V -B clean install -f testsuite -Pkafka-3_5_2 $MAVEN_EXTRA_ARGS
@@ -104,20 +119,7 @@ elif [[ "$arch" != 'ppc64le' ]]; then
     EXIT=$?
     exitIfError
 
-    clearDockerEnv
-    mvn -e -V -B clean install -f testsuite -Pkafka-3_1_2 $MAVEN_EXTRA_ARGS -DfailIfNoTests=false -Dtest=\!KeycloakKRaftAuthorizationTests,\!KeycloakZKAuthorizationTests
-    EXIT=$?
-    exitIfError
-
-    clearDockerEnv
-    mvn -e -V -B clean install -f testsuite -Pkafka-3_0_0 $MAVEN_EXTRA_ARGS -DfailIfNoTests=false -Dtest=\!KeycloakKRaftAuthorizationTests,\!KeycloakZKAuthorizationTests
-    EXIT=$?
-    exitIfError
-
-    clearDockerEnv
-    mvn -e -V -B clean install -f testsuite -Pkafka-2_8_1 $MAVEN_EXTRA_ARGS -DfailIfNoTests=false -Dtest=\!KeycloakKRaftAuthorizationTests,\!KeycloakZKAuthorizationTests
-    EXIT=$?
-    exitIfError
+    # Kafka 3.1.x and older versions are no longer supported
   fi
 
   set -e

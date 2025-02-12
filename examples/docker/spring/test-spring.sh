@@ -3,7 +3,7 @@ set -x
 
 docker rm -f spring
 docker run -d --name spring strimzi/example-spring
-for i in {1..10}
+for i in {1..60}
 do
   sleep 1
   RESULT=$(docker logs spring | grep "Started SpringAuthorizationServerApplication")

@@ -10,7 +10,7 @@ phase which is otherwise used when integration tests are intermingled in the sam
 Preparing
 =========
 
-Make sure that the following ports on your host machine are free: 9092, 2181 (Kafka), 8080, 8443 (Keycloak), 4444, 4445 (Hydra), 8091, 8090 (Mock OAuth Server).
+Make sure that the following ports on your host machine are free: 9092, 2181 (Kafka), 8080, 8443 (Keycloak), 4444, 4445 (Hydra), 8091, 8090 (Mock OAuth Server), 1088, 1750 (Kerberos).
 
 Then, you have to add some entries to your `/etc/hosts` file:
 
@@ -32,7 +32,7 @@ Running
 
 You may first need to perform the following cleanup of pre-existing containers / network definitions:
 
-    docker rm -f keycloak kafka zookeeper hydra hydra-jwt hydra-import hydra-jwt-import
+    docker rm -f keycloak kafka zookeeper hydra hydra-jwt mockoauth kerberos
     docker network rm $(docker network ls | grep test | awk '{print $1}')
     
 To build and run the testsuite you need a running 'docker' daemon, then simply run:
@@ -47,29 +47,21 @@ By using `clean` you make sure that the latest project jars are included into th
 
 There are several profiles available to test with a specific version of Kafka images:
 
-- kafka-2_3_1
-- kafka-2_4_0
-- kafka-2_4_1
-- kafka-2_5_0
-- kafka-2_5_1
-- kafka-2_6_0
-- kafka-2_6_2
-- kafka-2_7_0
-- kafka-2_7_1
-- kafka-2_8_0
-- kafka-2_8_1
-- kafka-3_0_0
-- kafka-3_1_0
-- kafka-3_1_2
 - kafka-3_2_3
 - kafka-3_3_1
 - kafka-3_3_2
 - kafka-3_4_0
 - kafka-3_5_0
+- kafka-3_5_2
+- kafka-3_6_1
+- kafka-3_6_2
+- kafka-3_7_1
+- kafka-3_8_1
+- kafka-3_9_0
 
 Only one at a time can be applied. For example:
  
-    mvn clean install -f testsuite -Pkafka-2_4_1
+    mvn clean install -f testsuite -Pkafka-3_7_1
 
 If you only want to run a single test, you first have to build the testsuite 'parent':
 
@@ -159,6 +151,7 @@ Make sure that you added 'kafka', 'keycloak', and 'hydra' to your `/etc/hosts` a
     127.0.0.1    hydra
     127.0.0.1    hydra-jwt
     127.0.0.1    mockoauth
+    127.0.0.1    kerberos
 
 
 ### How to set a custom Kafka image
@@ -171,6 +164,6 @@ Thus, you don't need to use the latest local build of strimzi/kafka libraries to
 
 But if you want you can specify the kafka image to use for the test as follows:
 
-    mvn clean test -Dkafka.docker.image=quay.io/strimzi/kafka:0.39.0-kafka-3.5.2 -f testsuite/keycloak-auth-tests
+    mvn clean test -Dkafka.docker.image=quay.io/strimzi/kafka:0.44.0-kafka-3.7.1 -f testsuite/keycloak-auth-tests
 
 This will use the latest locally built kafka image of strimzi-kafka-operator project.
